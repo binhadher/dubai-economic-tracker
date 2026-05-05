@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dubai Economic Tracker — Edition 1 · April 30, 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        /* ============================================================
+           DUBAI BRAND PALETTE (Official Guidelines 2026 V2)
+           ============================================================ */
+        :root {
+            /* City of Dubai — Primary */
+            --dubai-blue: #008ed6;
+            --dubai-magenta: #ba2b87;
+            --dubai-purple: #6e2b61;
+            --dubai-red: #a7192f;
+
+            /* City of Dubai — Secondary */
+            --dubai-sand: #d7d1c5;
+            --dubai-teal: #115e66;
+            --dubai-orange: #fa4516;
+
+            /* Dubai Calendar — Primary */
+            --cal-red: #d61220;
+            --cal-orange: #fa4516;
+            --cal-amber: #fc9900;
+            --cal-burgundy: #7c2629;
+
+            /* Dubai Business Events — Primary */
+            --be-teal: #00c7b0;
+            --be-dark-navy: #003d4c;
+
+            /* Status colours (brand-adjacent) */
+            --status-green: #00c7b0;
+            --status-green-bg: rgba(0, 199, 176, 0.10);
+            --status-amber: #fc9900;
+            --status-amber-bg: rgba(252, 153, 0, 0.10);
+            --status-red: #d61220;
+            --status-red-bg: rgba(214, 18, 32, 0.10);
+            --status-blue: #008ed6;
+            --status-blue-bg: rgba(0, 142, 214, 0.10);
+
+            /* Text & surfaces — light theme */
+            --text-primary: #003d4c;
+            --text-secondary: #115e66;
+            --text-muted: #6b7b82;
+            --text-body: #2a3f45;
+            --bg-body: #f5f3ef;
+            --bg-page: #ffffff;
+            --bg-card: #ffffff;
+            --border: #e2ddd4;
+            --border-light: rgba(0, 61, 76, 0.08);
+            --shadow-sm: 0 1px 3px rgba(0,61,76,0.06);
+            --shadow-md: 0 4px 16px rgba(0,61,76,0.08);
+            --shadow-lg: 0 12px 40px rgba(0,61,76,0.10);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-body);
+            color: var(--text-body);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .document {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--bg-page);
+            min-height: 100vh;
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: linear-gradient(135deg, var(--dubai-blue) 0%, #0077b3 100%);
+            padding: 40px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .brand-icon {
+            width: 48px; height: 48px;
+            background: rgba(255,255,255,0.18);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 900;
+            color: #fff;
+            backdrop-filter: blur(4px);
+        }
+
+        .brand-text {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: rgba(255,255,255,0.9);
+            text-transform: uppercase;
+        }
+
+        .brand-sub {
+            font-size: 11px;
+            color: rgba(255,255,255,0.65);
+            letter-spacing: 2px;
+            margin-top: 2px;
+        }
+
+        .confidential-badge {
+            background: rgba(214, 18, 32, 0.15);
+            border: 1px solid rgba(214, 18, 32, 0.35);
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            backdrop-filter: blur(4px);
+        }
+
+        .header-title {
+            font-family: 'DM Sans', 'Inter', sans-serif;
+            font-size: 42px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            line-height: 1.15;
+        }
+
+        .header-headline {
+            font-size: 20px;
+            color: rgba(255,255,255,0.85);
+            font-weight: 500;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .header-meta {
+            display: flex;
+            gap: 30px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .header-meta span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-meta .dot {
+            width: 6px; height: 6px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+        }
+
+        /* ===== SECTIONS ===== */
+        .section {
+            padding: 40px 60px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--dubai-teal);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border), transparent);
+        }
+
+        /* ===== HERO CARDS ===== */
+        .hero-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .hero-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: default;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .hero-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+        }
+
+        .hero-card.green::before { background: var(--status-green); }
+        .hero-card.amber::before { background: var(--status-amber); }
+        .hero-card.red::before { background: var(--status-red); }
+
+        .hero-label {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .hero-value {
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .hero-card.green .hero-value { color: var(--status-green); }
+        .hero-card.amber .hero-value { color: var(--status-amber); }
+        .hero-card.red .hero-value { color: var(--status-red); }
+
+        .hero-status {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* ===== SECTOR SUMMARY BAR ===== */
+        .sector-bar {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .sector-mini {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: default;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .sector-mini:hover {
+            border-color: var(--dubai-blue);
+            box-shadow: var(--shadow-md);
+        }
+
+        .sector-mini-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .sector-mini-value {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .sector-mini.green .sector-mini-value { color: var(--status-green); }
+        .sector-mini.amber .sector-mini-value { color: var(--status-amber); }
+        .sector-mini.red .sector-mini-value { color: var(--status-red); }
+        .sector-mini.blue .sector-mini-value { color: var(--status-blue); }
+
+        .sector-mini-status {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+
+        .sector-mini.green .sector-mini-status { background: var(--status-green-bg); color: var(--status-green); }
+        .sector-mini.amber .sector-mini-status { background: var(--status-amber-bg); color: var(--status-amber); }
+        .sector-mini.red .sector-mini-status { background: var(--status-red-bg); color: var(--status-red); }
+        .sector-mini.blue .sector-mini-status { background: var(--status-blue-bg); color: var(--status-blue); }
+
+        .sector-mini-breakdown {
+            font-size: 10px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* ===== WINNERS & LOSERS ===== */
+        .wl-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .wl-column {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .wl-header {
+            padding: 16px 24px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .wl-column.winners .wl-header {
+            background: var(--status-green-bg);
+            color: var(--status-green);
+            border-bottom: 1px solid rgba(0, 199, 176, 0.15);
+        }
+
+        .wl-column.losers .wl-header {
+            background: var(--status-red-bg);
+            color: var(--status-red);
+            border-bottom: 1px solid rgba(214, 18, 32, 0.15);
+        }
+
+        .wl-list { padding: 8px 0; }
+
+        .wl-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            border-bottom: 1px solid var(--border-light);
+            transition: background 0.2s ease;
+            cursor: default;
+            position: relative;
+        }
+
+        .wl-item:last-child { border-bottom: none; }
+        .wl-item:hover { background: rgba(0, 142, 214, 0.03); }
+
+        .wl-item-info { flex: 1; }
+        .wl-item-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+        .wl-item-sector {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .wl-item-value {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .wl-column.winners .wl-item-value { color: var(--status-green); }
+        .wl-column.losers .wl-item-value { color: var(--status-red); }
+
+        /* ===== STORY SECTION ===== */
+        .story-box {
+            background: linear-gradient(135deg, rgba(0, 142, 214, 0.04), rgba(0, 142, 214, 0.01));
+            border: 1px solid rgba(0, 142, 214, 0.12);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .story-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--text-body);
+        }
+
+        .story-text p { margin-bottom: 16px; }
+        .story-text p:last-child { margin-bottom: 0; }
+
+        .insight-box {
+            background: var(--bg-card);
+            border-left: 4px solid var(--dubai-blue);
+            border-radius: 0 12px 12px 0;
+            padding: 20px 24px;
+            margin-top: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .insight-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--dubai-blue);
+            margin-bottom: 8px;
+        }
+
+        .insight-text {
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        /* ===== MOMENTUM TABLE ===== */
+        .momentum-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .momentum-table th {
+            text-align: left;
+            padding: 14px 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .momentum-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 14px;
+        }
+
+        .momentum-table tr:hover td {
+            background: rgba(0, 142, 214, 0.03);
+        }
+
+        .momentum-kpi {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .momentum-arrow {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: default;
+            position: relative;
+        }
+
+        .momentum-arrow.up {
+            background: var(--status-green-bg);
+            color: var(--status-green);
+        }
+
+        .momentum-arrow.down {
+            background: var(--status-red-bg);
+            color: var(--status-red);
+        }
+
+        .momentum-arrow.flat {
+            background: rgba(107, 123, 130, 0.1);
+            color: var(--text-muted);
+        }
+
+        /* ===== SECTOR CARDS ===== */
+        .sector-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .sector-card:hover {
+            border-color: var(--dubai-blue);
+            box-shadow: var(--shadow-md);
+        }
+
+        .sector-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .sector-card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .status-badge {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 6px 16px;
+            border-radius: 20px;
+        }
+
+        .status-badge.above { background: var(--status-green-bg); color: var(--status-green); }
+        .status-badge.recovering { background: var(--status-amber-bg); color: var(--status-amber); }
+        .status-badge.critical { background: var(--status-red-bg); color: var(--status-red); }
+        .status-badge.normal { background: var(--status-blue-bg); color: var(--status-blue); }
+        .status-badge.mixed { background: linear-gradient(90deg, var(--status-green-bg), var(--status-amber-bg)); color: var(--status-amber); border: 1px solid var(--status-amber); }
+
+        .sector-card-desc {
+            font-size: 14px;
+            color: var(--text-body);
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .kpi-bars { display: flex; flex-direction: column; gap: 16px; }
+
+        .kpi-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .kpi-bar-label {
+            width: 180px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .kpi-bar-track {
+            flex: 1;
+            height: 32px;
+            background: var(--bg-body);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .kpi-bar-fill {
+            height: 100%;
+            border-radius: 8px;
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            min-width: 4px;
+        }
+
+        .kpi-bar-fill.green { background: linear-gradient(90deg, #00b39e, var(--status-green)); }
+        .kpi-bar-fill.amber { background: linear-gradient(90deg, #e68a00, var(--status-amber)); }
+        .kpi-bar-fill.red { background: linear-gradient(90deg, #b0101a, var(--status-red)); }
+
+        .kpi-bar-value {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .kpi-bar-value.outside {
+            right: auto;
+            left: calc(100% + 10px);
+            color: var(--text-secondary);
+            text-shadow: none;
+        }
+
+        /* ===== METHODOLOGY ===== */
+        .methodology-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .methodology-header {
+            padding: 20px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .methodology-header:hover {
+            background: rgba(0, 142, 214, 0.03);
+        }
+
+        .methodology-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .methodology-chevron {
+            font-size: 18px;
+            color: var(--text-muted);
+            transition: transform 0.3s ease;
+        }
+
+        .methodology-toggle.open .methodology-chevron {
+            transform: rotate(180deg);
+        }
+
+        .methodology-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+
+        .methodology-toggle.open .methodology-body {
+            max-height: 800px;
+            padding: 0 28px 28px;
+        }
+
+        .method-item {
+            margin-bottom: 16px;
+        }
+
+        .method-item:last-child { margin-bottom: 0; }
+
+        .method-item h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dubai-blue);
+            margin-bottom: 6px;
+        }
+
+        .method-item p {
+            font-size: 13px;
+            color: var(--text-body);
+            line-height: 1.6;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 30px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+            background: var(--dubai-teal);
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-brand .brand-icon {
+            width: 28px; height: 28px;
+            font-size: 14px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.15);
+        }
+
+        /* ===== TOOLTIP ===== */
+        .tooltip {
+            position: fixed;
+            background: var(--be-dark-navy);
+            border: 1px solid rgba(0, 142, 214, 0.35);
+            border-radius: 12px;
+            padding: 16px 20px;
+            max-width: 320px;
+            z-index: 10000;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+        }
+
+        .tooltip.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tooltip-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dubai-blue);
+            margin-bottom: 6px;
+        }
+
+        .tooltip-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .tooltip-desc {
+            font-size: 12px;
+            color: rgba(255,255,255,0.75);
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .tooltip-wow {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .tooltip-wow.positive { background: var(--status-green-bg); color: var(--status-green); }
+        .tooltip-wow.negative { background: var(--status-red-bg); color: var(--status-red); }
+        .tooltip-wow.neutral { background: rgba(148,163,184,0.15); color: rgba(255,255,255,0.6); }
+
+        /* ===== CHART CONTAINER ===== */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+
+        .chart-container.radar {
+            height: 350px;
+            max-width: 500px;
+            margin: 20px auto;
+        }
+
+        /* ===== PRINT ===== */
+        @media print {
+            body { background: white; }
+            .document { box-shadow: none; max-width: 100%; }
+            .tooltip { display: none !important; }
+            .hero-card, .sector-mini, .wl-item, .sector-card {
+                break-inside: avoid;
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .section { padding: 30px; }
+            .header { padding: 30px; }
+            .hero-grid { grid-template-columns: 1fr; }
+            .sector-bar { grid-template-columns: repeat(3, 1fr); }
+            .wl-grid { grid-template-columns: 1fr; }
+            .footer { flex-direction: column; gap: 10px; text-align: center; }
+        }
+
+        @media (max-width: 600px) {
+            .sector-bar { grid-template-columns: repeat(2, 1fr); }
+            .kpi-bar-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .kpi-bar-label { width: auto; }
+            .kpi-bar-track { width: 100%; }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .delay-3 { animation-delay: 0.3s; opacity: 0; }
+        .delay-4 { animation-delay: 0.4s; opacity: 0; }
+        .delay-5 { animation-delay: 0.5s; opacity: 0; }
+    </style>
+</head>
+<body>
+    <div class="document">
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-top">
+                <div class="brand">
+                    <div class="brand-icon">D</div>
+                    <div>
+                        <div class="brand-text">Dubai Economy & Tourism</div>
+                        <div class="brand-sub">Dubai Economic Tracker</div>
+                    </div>
+                </div>
+                <div class="confidential-badge">Confidential</div>
+            </div>
+            <h1 class="header-title">Dubai's consumer economy is back. Aviation and markets are not.</h1>
+            <div class="header-meta">
+                <span><span class="dot"></span> Edition 1 · April 30, 2026</span>
+                <span><span class="dot"></span> Weekly Recovery Report</span>
+                <span><span class="dot"></span> Prepared for Dubai Majlis</span>
+            </div>
+        </header>
+
+        <!-- RECOVERY AT A GLANCE -->
+        <section class="section">
+            <div class="section-title">Recovery at a Glance</div>
+            <div class="hero-grid">
+                <div class="hero-card green animate-in delay-1" data-kpi="consumer">
+                    <div class="hero-label">Consumer</div>
+                    <div class="hero-value">105%</div>
+                    <div class="hero-status">Above Baseline</div>
+                </div>
+                <div class="hero-card amber animate-in delay-2" data-kpi="travel">
+                    <div class="hero-label">Travel</div>
+                    <div class="hero-value">95%</div>
+                    <div class="hero-status">Mixed / Split Recovery</div>
+                </div>
+                <div class="hero-card red animate-in delay-3" data-kpi="investor">
+                    <div class="hero-label">Investor</div>
+                    <div class="hero-value">10%</div>
+                    <div class="hero-status">Critical</div>
+                </div>
+            </div>
+
+            <!-- SECTOR SUMMARY BAR -->
+            <div class="sector-bar">
+                <div class="sector-mini amber" data-kpi="trade-sector">
+                    <div class="sector-mini-name">Trade</div>
+                    <div class="sector-mini-value">65%</div>
+                    <div class="sector-mini-status">Recovering</div>
+                    <div class="sector-mini-breakdown">3 Above · 1 Normal<br>3 Critical</div>
+                </div>
+                <div class="sector-mini amber" data-kpi="travel-sector">
+                    <div class="sector-mini-name">Travel</div>
+                    <div class="sector-mini-value">95%</div>
+                    <div class="sector-mini-status">Mixed</div>
+                    <div class="sector-mini-breakdown">5 Above · 0 Normal<br>2 Critical</div>
+                </div>
+                <div class="sector-mini green" data-kpi="tourism-sector">
+                    <div class="sector-mini-name">Tourism & Population</div>
+                    <div class="sector-mini-value">118%</div>
+                    <div class="sector-mini-status">Above Baseline</div>
+                    <div class="sector-mini-breakdown">3 Above · 2 Recovering</div>
+                </div>
+                <div class="sector-mini green" data-kpi="consumer-sector">
+                    <div class="sector-mini-name">Consumer</div>
+                    <div class="sector-mini-value">105%</div>
+                    <div class="sector-mini-status">Above Baseline</div>
+                    <div class="sector-mini-breakdown">3 Above · 2 Normal</div>
+                </div>
+                <div class="sector-mini amber" data-kpi="investor-sector">
+                    <div class="sector-mini-name">Investor</div>
+                    <div class="sector-mini-value">63%</div>
+                    <div class="sector-mini-status">Recovering</div>
+                    <div class="sector-mini-breakdown">0 Above · 2 Normal<br>1 Recovering · 1 Critical</div>
+                </div>
+                <div class="sector-mini amber" data-kpi="business-sector">
+                    <div class="sector-mini-name">Business Environment</div>
+                    <div class="sector-mini-value">70%</div>
+                    <div class="sector-mini-status">Recovering</div>
+                    <div class="sector-mini-breakdown">0 Above · 2 Normal<br>1 Critical</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WINNERS & LOSERS -->
+        <section class="section">
+            <div class="section-title">Winners & Losers</div>
+            <div class="wl-grid">
+                <div class="wl-column winners">
+                    <div class="wl-header">📈 Beating Baseline</div>
+                    <div class="wl-list" id="winners-list"></div>
+                </div>
+                <div class="wl-column losers">
+                    <div class="wl-header">📉 Still Critical</div>
+                    <div class="wl-list" id="losers-list"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- THIS WEEK'S STORY -->
+        <section class="section">
+            <div class="section-title">This Week's Story — Consumer Deep-Dive</div>
+            <div class="story-box">
+                <div class="story-text">
+                    <p>The consumer sector is Dubai's standout success story. Domestic card spending has surpassed pre-conflict levels at 105%, international card spend is even higher at 106%, and mall footfall has recovered to 94% — essentially normal.</p>
+                    <p>The real headline is remittances: outbound transfers surged to 167% of baseline (a +984% week-on-week jump), likely reflecting pent-up cross-border payment demand finally clearing. Inbound remittances hit exactly 100% — a clean return to normal.</p>
+                    <p>Dubai residents are spending, shopping, and transferring money as if the conflict never happened.</p>
+                </div>
+                <div class="insight-box">
+                    <div class="insight-label">Key Insight</div>
+                    <div class="insight-text">Dubai's consumer economy has effectively returned to pre-conflict normal. The challenge is no longer demand — it's ensuring supply chains (trade, logistics) and capital markets (investor confidence) can keep pace.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4-WEEK MOMENTUM -->
+        <section class="section">
+            <div class="section-title">4-Week Momentum</div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Directional trajectory of 6 headline KPIs over the past 4 weeks. Hover arrows for context.</p>
+            <table class="momentum-table" id="momentum-table"></table>
+        </section>
+
+        <!-- SECTOR BREAKDOWN -->
+        <section class="section">
+            <div class="section-title">Sector Breakdown</div>
+            <div id="sector-breakdown"></div>
+        </section>
+
+        <!-- METHODOLOGY -->
+        <section class="section">
+            <div class="methodology-toggle" id="methodology">
+                <div class="methodology-header" onclick="toggleMethodology()">
+                    <span class="methodology-title">📋 Methodology & Data Sources</span>
+                    <span class="methodology-chevron">▼</span>
+                </div>
+                <div class="methodology-body">
+                    <div class="method-item">
+                        <h4>Baseline Period</h4>
+                        <p>Pre-conflict weekly averages calculated from the 12-month period prior to the onset of hostilities. Each KPI's baseline represents its "normal" operating level.</p>
+                    </div>
+                    <div class="method-item">
+                        <h4>Recovery Percentage</h4>
+                        <p>Current week's value divided by the baseline value, expressed as a percentage. 100% = full recovery to pre-conflict normal.</p>
+                    </div>
+                    <div class="method-item">
+                        <h4>Status Thresholds</h4>
+                        <p><strong style="color: var(--status-red)">Critical (&lt;50%):</strong> Severely below normal — active disruption or collapse<br>
+                        <strong style="color: var(--status-amber)">Recovering (50–80%):</strong> Improving but materially below normal<br>
+                        <strong style="color: var(--status-blue)">Normal (80–100%):</strong> Approaching or at pre-conflict levels<br>
+                        <strong style="color: var(--status-green)">Above Baseline (&gt;100%):</strong> Exceeding pre-conflict levels</p>
+                    </div>
+                    <div class="method-item">
+                        <h4>Week-on-Week (WoW)</h4>
+                        <p>Percentage change from the previous reporting week.</p>
+                    </div>
+                    <div class="method-item">
+                        <h4>Data Sources</h4>
+                        <p>Dubai Economy & Tourism sectoral reporting, DXB airport operations, Jebel Ali port authority, Dubai Financial Market, UAE Central Bank remittance data, Network International card transaction data, Dubai Land Department, DTCM hotel occupancy reporting.</p>
+                    </div>
+                    <div class="method-item">
+                        <h4>Frequency</h4>
+                        <p>Weekly, published every Wednesday. Data reflects the preceding 7-day period (Thursday–Wednesday).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <div class="footer-brand">
+                <div class="brand-icon" style="width: 28px; height: 28px; font-size: 14px; border-radius: 8px;">D</div>
+                <span>Dubai Economic Tracker — Prepared by Dubai Economy & Tourism</span>
+            </div>
+            <span>For Dubai Majlis members — Confidential</span>
+        </footer>
+    </div>
+
+    <!-- TOOLTIP -->
+    <div class="tooltip" id="tooltip">
+        <div class="tooltip-title" id="tooltip-title"></div>
+        <div class="tooltip-value" id="tooltip-value"></div>
+        <div class="tooltip-desc" id="tooltip-desc"></div>
+        <div class="tooltip-wow" id="tooltip-wow"></div>
+    </div>
+
+    <script>
+        // ============================================================
+        // DATA CONFIGURATION
+        // ============================================================
+        // Del Boy: Replace these values with API fetch calls
+        // Example: value: await fetch('https://your-api.com/kpi/consumer').then(r => r.json())
+        // ============================================================
+
+        const TRACKER_DATA = {
+            edition: "1",
+            date: "April 30, 2026",
+            headline: "Dubai's consumer economy is back. Aviation and markets are not.",
+
+            // Hero metrics
+            heroes: [
+                { id: "consumer", label: "Consumer", value: 105, status: "above", statusLabel: "Above Baseline" },
+                { id: "travel", label: "Travel", value: 95, status: "mixed", statusLabel: "Mixed / Split Recovery" },
+                { id: "investor", label: "Investor", value: 10, status: "critical", statusLabel: "Critical" }
+            ],
+
+            // Sector summary
+            sectors: [
+                { id: "trade", name: "Trade", value: 65, status: "recovering", above: 3, normal: 1, recovering: 0, critical: 3 },
+                { id: "travel", name: "Travel", value: 95, status: "mixed", above: 5, normal: 0, recovering: 0, critical: 2 },
+                { id: "tourism", name: "Tourism & Population", value: 118, status: "above", above: 3, normal: 0, recovering: 2, critical: 0 },
+                { id: "consumer", name: "Consumer", value: 105, status: "above", above: 3, normal: 2, recovering: 0, critical: 0 },
+                { id: "investor", name: "Investor", value: 63, status: "recovering", above: 0, normal: 2, recovering: 1, critical: 1 },
+                { id: "business", name: "Business Environment", value: 70, status: "recovering", above: 0, normal: 2, recovering: 0, critical: 1 }
+            ],
+
+            // Winners & Losers
+            winners: [
+                { id: "res-hotel", label: "Residents Hotel Check-ins", sector: "Tourism", value: 222, tooltip: "Hotel check-ins by UAE residents, compared to pre-conflict baseline" },
+                { id: "remit-out", label: "Remittance Outbound", sector: "Consumer", value: 167, tooltip: "Total outbound remittance volume via UAE banks and exchange houses" },
+                { id: "oal-countries", label: "OAL Countries", sector: "Travel", value: 138, tooltip: "Number of countries served by Other Airlines (non-Emirates/FlyDubai)" },
+                { id: "total-pass", label: "Total Passenger Vol.", sector: "Travel", value: 135, tooltip: "Combined passenger volume across all airlines at DXB" },
+                { id: "flydubai-pass", label: "FlyDubai Passenger Vol.", sector: "Travel", value: 130, tooltip: "FlyDubai passenger numbers compared to baseline" },
+                { id: "jebelali-empties", label: "Jebel Ali Empties", sector: "Trade", value: 120, tooltip: "Empty container movements at Jebel Ali Port" },
+                { id: "res-inbound", label: "Residents Inbound", sector: "Tourism", value: 118, tooltip: "Inbound arrivals of UAE residents to Dubai" },
+                { id: "dnata-cargo", label: "DNATA Cargo", sector: "Trade", value: 116, tooltip: "DNATA air cargo handling volume at DXB" },
+                { id: "ek-cargo", label: "EK Cargo", sector: "Trade", value: 114, tooltip: "Emirates SkyCargo freight tonnes handled" }
+            ],
+
+            losers: [
+                { id: "jebelali-in", label: "Jebel Ali Inbound", sector: "Trade", value: 3, tooltip: "Inbound sea cargo volume at Jebel Ali Port" },
+                { id: "sea-cargo", label: "Sea Cargo (Jebel Ali)", sector: "Trade", value: 8, tooltip: "Total maritime cargo throughput at Jebel Ali" },
+                { id: "total-flights", label: "Total Flights", sector: "Travel", value: 8, tooltip: "Total flight movements at Dubai airports" },
+                { id: "dfm-size", label: "DFM Market Size", sector: "Investor", value: 10, tooltip: "Dubai Financial Market total market capitalisation" },
+                { id: "ek-pass", label: "EK Passenger Vol.", sector: "Travel", value: 12, tooltip: "Emirates Airline passenger numbers" },
+                { id: "jebelali-out", label: "Jebel Ali Outbound", sector: "Trade", value: 12, tooltip: "Outbound sea cargo volume at Jebel Ali Port" },
+                { id: "freezone-lic", label: "Freezone Licences", sector: "Business", value: 33, tooltip: "New business licences issued in Dubai freezones" }
+            ],
+
+            // 4-Week Momentum
+            momentum: [
+                { id: "ek-cargo-mom", label: "EK Cargo", w3: "up", w2: "up", w1: "up", current: "up", tooltip: "Air cargo continues to surge as sea routes remain disrupted" },
+                { id: "ek-pass-mom", label: "EK Passenger", w3: "down", w2: "down", w1: "down", current: "down", tooltip: "Emirates capacity constraints continue to limit recovery" },
+                { id: "mall-mom", label: "Mall Visits", w3: "up", w2: "up", w1: "flat", current: "up", tooltip: "Mall footfall approaching pre-conflict levels with +29% WoW surge" },
+                { id: "domestic-card-mom", label: "Domestic Card Spend", w3: "up", w2: "up", w1: "up", current: "up", tooltip: "Domestic consumer spending consistently above baseline" },
+                { id: "dfm-mom", label: "DFM Market Cap", w3: "down", w2: "down", w1: "flat", current: "down", tooltip: "Market capitalisation remains severely depressed" },
+                { id: "biz-lic-mom", label: "Business Licences", w3: "up", w2: "up", w1: "flat", current: "up", tooltip: "Business formation showing steady recovery momentum" }
+            ],
+
+            // Sector Breakdown with KPIs
+            sectorDetails: [
+                {
+                    id: "trade",
+                    name: "Trade",
+                    status: "recovering",
+                    description: "A sector of stark contrasts. Air cargo has surged past baseline — EK Cargo at 114% and DNATA at 116% — reflecting Dubai's pivot to air freight as sea routes remain disrupted. But Jebel Ali's inbound sea cargo sits at a catastrophic 3%, and overall maritime trade is at just 8%. Dubai's role as a re-export hub via sea is severely compromised, even as the air corridor thrives.",
+                    kpis: [
+                        { id: "dnata-cargo-det", label: "DNATA Cargo", value: 116, wow: "+12%", tooltip: "DNATA air cargo handling volume at DXB — strong recovery driven by air freight pivot" },
+                        { id: "ek-cargo-det", label: "EK Cargo", value: 114, wow: "+8%", tooltip: "Emirates SkyCargo freight tonnes — benefiting from sea route disruption" },
+                        { id: "jebelali-in-det", label: "Jebel Ali Inbound", value: 3, wow: "-2%", tooltip: "Inbound sea cargo at Jebel Ali — severely disrupted by regional conflict" }
+                    ]
+                },
+                {
+                    id: "travel",
+                    name: "Travel",
+                    status: "mixed",
+                    description: "Dubai's airports tell two stories. Partner airlines are thriving — OAL countries served at 138%, FlyDubai passengers at 130%, and total passenger volume at 135% above baseline. But Emirates itself is in crisis: passenger volumes at 12% and total flights at just 8%. The demand is there; Emirates' capacity isn't. FlyDubai and other airlines are filling the gap, but the flagship carrier's absence is conspicuous.",
+                    kpis: [
+                        { id: "oal-det", label: "OAL Countries", value: 138, wow: "+15%", tooltip: "Other Airlines countries served — partner carriers expanding routes" },
+                        { id: "total-pass-det", label: "Total Passenger Vol.", value: 135, wow: "+22%", tooltip: "Combined passenger volume across all carriers at DXB" },
+                        { id: "ek-pass-det", label: "EK Passenger Vol.", value: 12, wow: "-5%", tooltip: "Emirates passenger numbers — severely constrained by fleet and crew availability" }
+                    ]
+                },
+                {
+                    id: "tourism",
+                    name: "Tourism & Population",
+                    status: "above",
+                    description: "Residents are the engine here. Hotel check-ins by residents have more than doubled baseline (222%), and both inbound and outbound resident movement is comfortably above 100%. Tourism is recovering more slowly — inbound tourists at 67% and hotel check-ins at 67% — but the domestic population is more than compensating. Dubai is full of its own people, even if international visitors haven't fully returned.",
+                    kpis: [
+                        { id: "res-hotel-det", label: "Residents Hotel Check-ins", value: 222, wow: "+45%", tooltip: "Hotel stays by UAE residents — staycation boom driving recovery" },
+                        { id: "res-inbound-det", label: "Residents Inbound", value: 118, wow: "+18%", tooltip: "Inbound resident arrivals — strong return of domestic population" },
+                        { id: "tour-inbound-det", label: "Tourists Inbound", value: 67, wow: "+12%", tooltip: "International tourist arrivals — recovering but below pre-conflict levels" }
+                    ]
+                },
+                {
+                    id: "consumer",
+                    name: "Consumer",
+                    status: "above",
+                    description: "The strongest sector in the tracker. Every single consumer KPI is at or above baseline. Domestic card spend (105%), international card spend (106%), and remittances have all crossed the pre-conflict threshold. Mall visits at 94% are the only metric still below baseline, and they're closing fast with a +29% WoW surge. Consumer confidence is not just recovered — it's thriving.",
+                    kpis: [
+                        { id: "remit-out-det", label: "Remittance Outbound", value: 167, wow: "+984%", tooltip: "Outbound remittances — pent-up demand clearing after conflict pause" },
+                        { id: "intl-card-det", label: "Intl. Card Spend", value: 106, wow: "+8%", tooltip: "International card spending by UAE residents — cross-border commerce normalising" },
+                        { id: "dom-card-det", label: "Domestic Card Spend", value: 105, wow: "+5%", tooltip: "Domestic card transactions — steady consumer spending above baseline" }
+                    ]
+                },
+                {
+                    id: "investor",
+                    name: "Investor",
+                    status: "recovering",
+                    description: "The weakest sector in the tracker and the biggest concern for long-term recovery. DFM market capitalisation sits at just 10% of baseline — a staggering loss of value that hasn't stabilised. Trading activity (61%) and new investor growth (94%) show some life, but capital velocity dropped 80% WoW. Investor sentiment remains firmly in crisis mode, disconnected from the real-economy recovery happening elsewhere.",
+                    kpis: [
+                        { id: "new-investor-det", label: "New Investor Growth", value: 94, wow: "+15%", tooltip: "New DFM investor registrations — approaching pre-conflict levels" },
+                        { id: "dfm-trade-det", label: "DFM Trading Activity", value: 61, wow: "-80%", tooltip: "DFM trading volume — capital velocity dropped sharply this week" },
+                        { id: "dfm-size-det", label: "DFM Market Size", value: 10, wow: "-5%", tooltip: "DFM market capitalisation — severely depressed, biggest concern for recovery" }
+                    ]
+                },
+                {
+                    id: "business",
+                    name: "Business Environment",
+                    status: "recovering",
+                    description: "Mainland business formation is near-normal at 82%, with total licences at 95%. The worry is freezones: at 33%, international business registrations remain deeply suppressed. This suggests that while Dubai's domestic entrepreneurs are pushing ahead, international investors and company-formers are still waiting for clearer signals before committing to a Dubai presence. The +78% WoW in freezone licences is encouraging but from a very low base.",
+                    kpis: [
+                        { id: "biz-total-det", label: "Business Licences Total", value: 95, wow: "+12%", tooltip: "Total new business licences — near-normal levels" },
+                        { id: "mainland-det", label: "Mainland Licences", value: 82, wow: "+15%", tooltip: "Mainland business registrations — domestic entrepreneurs driving recovery" },
+                        { id: "freezone-det", label: "Freezone Licences", value: 33, wow: "+78%", tooltip: "Freezone registrations — improving from very low base, international investors cautious" }
+                    ]
+                }
+            ]
+        };
+
+        // ============================================================
+        // TOOLTIP SYSTEM
+        // ============================================================
+        const tooltip = document.getElementById('tooltip');
+        const tooltipTitle = document.getElementById('tooltip-title');
+        const tooltipValue = document.getElementById('tooltip-value');
+        const tooltipDesc = document.getElementById('tooltip-desc');
+        const tooltipWow = document.getElementById('tooltip-wow');
+
+        function showTooltip(e, title, value, desc, wow) {
+            tooltipTitle.textContent = title;
+            tooltipValue.textContent = typeof value === 'number' ? value + '%' : value;
+            tooltipDesc.textContent = desc || 'No description available';
+
+            if (wow) {
+                tooltipWow.style.display = 'inline-block';
+                tooltipWow.textContent = 'WoW: ' + wow;
+                tooltipWow.className = 'tooltip-wow ' + (wow.startsWith('+') ? 'positive' : wow.startsWith('-') ? 'negative' : 'neutral');
+            } else {
+                tooltipWow.style.display = 'none';
+            }
+
+            tooltip.classList.add('visible');
+            positionTooltip(e);
+        }
+
+        function hideTooltip() {
+            tooltip.classList.remove('visible');
+        }
+
+        function positionTooltip(e) {
+            const x = e.clientX + 15;
+            const y = e.clientY + 15;
+            const rect = tooltip.getBoundingClientRect();
+            const winW = window.innerWidth;
+            const winH = window.innerHeight;
+
+            let finalX = x;
+            let finalY = y;
+
+            if (x + rect.width > winW) finalX = e.clientX - rect.width - 10;
+            if (y + rect.height > winH) finalY = e.clientY - rect.height - 10;
+
+            tooltip.style.left = finalX + 'px';
+            tooltip.style.top = finalY + 'px';
+        }
+
+        // ============================================================
+        // RENDER FUNCTIONS
+        // ============================================================
+
+        // Render Winners & Losers
+        function renderWinnersLosers() {
+            const winnersList = document.getElementById('winners-list');
+            const losersList = document.getElementById('losers-list');
+
+            TRACKER_DATA.winners.forEach(w => {
+                const item = document.createElement('div');
+                item.className = 'wl-item';
+                item.innerHTML = `
+                    <div class="wl-item-info">
+                        <div class="wl-item-name">${w.label}</div>
+                        <div class="wl-item-sector">${w.sector}</div>
+                    </div>
+                    <div class="wl-item-value">${w.value}%</div>
+                `;
+                item.addEventListener('mouseenter', (e) => showTooltip(e, w.label, w.value, w.tooltip, null));
+                item.addEventListener('mouseleave', hideTooltip);
+                item.addEventListener('mousemove', positionTooltip);
+                winnersList.appendChild(item);
+            });
+
+            TRACKER_DATA.losers.forEach(l => {
+                const item = document.createElement('div');
+                item.className = 'wl-item';
+                item.innerHTML = `
+                    <div class="wl-item-info">
+                        <div class="wl-item-name">${l.label}</div>
+                        <div class="wl-item-sector">${l.sector}</div>
+                    </div>
+                    <div class="wl-item-value">${l.value}%</div>
+                `;
+                item.addEventListener('mouseenter', (e) => showTooltip(e, l.label, l.value, l.tooltip, null));
+                item.addEventListener('mouseleave', hideTooltip);
+                item.addEventListener('mousemove', positionTooltip);
+                losersList.appendChild(item);
+            });
+        }
+
+        // Render Momentum Table
+        function renderMomentum() {
+            const table = document.getElementById('momentum-table');
+            const arrows = { up: '↑', down: '↓', flat: '→' };
+
+            let html = `
+                <thead>
+                    <tr>
+                        <th>KPI</th>
+                        <th>W-3</th>
+                        <th>W-2</th>
+                        <th>W-1</th>
+                        <th>CURRENT</th>
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+
+            TRACKER_DATA.momentum.forEach(m => {
+                html += `
+                    <tr>
+                        <td><span class="momentum-kpi">${m.label}</span></td>
+                        <td><span class="momentum-arrow ${m.w3}" data-tooltip="${m.tooltip}">${arrows[m.w3]}</span></td>
+                        <td><span class="momentum-arrow ${m.w2}" data-tooltip="${m.tooltip}">${arrows[m.w2]}</span></td>
+                        <td><span class="momentum-arrow ${m.w1}" data-tooltip="${m.tooltip}">${arrows[m.w1]}</span></td>
+                        <td><span class="momentum-arrow ${m.current}" data-tooltip="${m.tooltip}">${arrows[m.current]}</span></td>
+
+                    </tr>
+                `;
+            });
+
+            html += '</tbody>';
+            table.innerHTML = html;
+
+            // Add tooltip events to arrows
+            table.querySelectorAll('.momentum-arrow').forEach(arrow => {
+                arrow.addEventListener('mouseenter', (e) => {
+                    showTooltip(e, 'Direction', arrows[e.target.classList.contains('up') ? 'up' : e.target.classList.contains('down') ? 'down' : 'flat'], e.target.dataset.tooltip, null);
+                });
+                arrow.addEventListener('mouseleave', hideTooltip);
+                arrow.addEventListener('mousemove', positionTooltip);
+            });
+        }
+
+        // Render Sector Breakdown
+        function renderSectorBreakdown() {
+            const container = document.getElementById('sector-breakdown');
+
+            TRACKER_DATA.sectorDetails.forEach((sector, idx) => {
+                const card = document.createElement('div');
+                card.className = 'sector-card animate-in delay-' + (idx + 1);
+
+                const statusClass = sector.status;
+                const statusLabel = sector.status === 'above' ? 'Above Baseline' :
+                                   sector.status === 'mixed' ? 'Mixed' :
+                                   sector.status === 'recovering' ? 'Recovering' :
+                                   sector.status === 'critical' ? 'Critical' : 'Normal';
+
+                let kpisHtml = '';
+                sector.kpis.forEach(kpi => {
+                    const barColor = kpi.value > 100 ? 'green' : kpi.value >= 50 ? 'amber' : 'red';
+                    const barWidth = Math.min(kpi.value, 100);
+                    const valueOutside = kpi.value > 100;
+
+                    kpisHtml += `
+                        <div class="kpi-bar-row" data-kpi="${kpi.id}">
+                            <div class="kpi-bar-label">${kpi.label}</div>
+                            <div class="kpi-bar-track">
+                                <div class="kpi-bar-fill ${barColor}" style="width: ${barWidth}%;" data-width="${barWidth}">
+                                    ${!valueOutside ? `<span class="kpi-bar-value">${kpi.value}%</span>` : ''}
+                                </div>
+                                ${valueOutside ? `<span class="kpi-bar-value outside">${kpi.value}%</span>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="sector-card-header">
+                        <div class="sector-card-title">${sector.name}</div>
+                        <div class="status-badge ${statusClass}">${statusLabel}</div>
+                    </div>
+                    <div class="sector-card-desc">${sector.description}</div>
+                    <div class="kpi-bars">${kpisHtml}</div>
+                `;
+
+                // Add tooltip events to KPI bars
+                card.querySelectorAll('.kpi-bar-row').forEach((row, kpiIdx) => {
+                    const kpi = sector.kpis[kpiIdx];
+                    row.addEventListener('mouseenter', (e) => showTooltip(e, kpi.label, kpi.value, kpi.tooltip, kpi.wow));
+                    row.addEventListener('mouseleave', hideTooltip);
+                    row.addEventListener('mousemove', positionTooltip);
+                });
+
+                container.appendChild(card);
+            });
+        }
+
+        // Methodology toggle
+        function toggleMethodology() {
+            document.getElementById('methodology').classList.toggle('open');
+        }
+
+        // Hero card tooltips
+        function setupHeroTooltips() {
+            document.querySelectorAll('.hero-card').forEach(card => {
+                const kpiId = card.dataset.kpi;
+                const hero = TRACKER_DATA.heroes.find(h => h.id === kpiId);
+                if (hero) {
+                    card.addEventListener('mouseenter', (e) => showTooltip(e, hero.label, hero.value + '%', hero.statusLabel + ' — Top-level sector recovery indicator', null));
+                    card.addEventListener('mouseleave', hideTooltip);
+                    card.addEventListener('mousemove', positionTooltip);
+                }
+            });
+        }
+
+        // Sector mini tooltips
+        function setupSectorMiniTooltips() {
+            document.querySelectorAll('.sector-mini').forEach(mini => {
+                const kpiId = mini.dataset.kpi;
+                const sector = TRACKER_DATA.sectors.find(s => s.id + '-sector' === kpiId);
+                if (sector) {
+                    const breakdown = `${sector.above} Above · ${sector.normal} Normal · ${sector.recovering} Recovering · ${sector.critical} Critical`;
+                    mini.addEventListener('mouseenter', (e) => showTooltip(e, sector.name, sector.value + '%', 'Sector recovery overview. ' + breakdown, null));
+                    mini.addEventListener('mouseleave', hideTooltip);
+                    mini.addEventListener('mousemove', positionTooltip);
+                }
+            });
+        }
+
+        // Animate bars on scroll
+        function animateBars() {
+            const bars = document.querySelectorAll('.kpi-bar-fill');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const bar = entry.target;
+                        const width = bar.dataset.width;
+                        bar.style.width = '0%';
+                        setTimeout(() => {
+                            bar.style.width = width + '%';
+                        }, 100);
+                        observer.unobserve(bar);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            bars.forEach(bar => observer.observe(bar));
+        }
+
+        // ============================================================
+        // DATA FETCHING (For Del Boy to replace with real API calls)
+        // ============================================================
+        // Example:
+        // async function fetchData() {
+        //     const response = await fetch('https://your-api.com/tracker-data');
+        //     const data = await response.json();
+        //     TRACKER_DATA = data;
+        //     init();
+        // }
+        // ============================================================
+
+        // Initialize
+        function init() {
+            renderWinnersLosers();
+            renderMomentum();
+            renderSectorBreakdown();
+            setupHeroTooltips();
+            setupSectorMiniTooltips();
+
+            // Delay bar animation slightly
+            setTimeout(animateBars, 500);
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>
