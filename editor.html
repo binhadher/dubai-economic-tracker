@@ -32,15 +32,23 @@ body{font-family:'Inter',sans-serif;background:#f0f2f5;color:#1a1a2e;min-height:
 .row{display:grid;gap:12px}.row-2{grid-template-columns:1fr 1fr}.row-3{grid-template-columns:1fr 1fr 1fr}.row-4{grid-template-columns:1fr 1fr 1fr 1fr}
 .card{border:1px solid #e5e5e5;border-radius:8px;padding:16px;background:#fafbfc}
 .card-title{font-size:13px;font-weight:700;color:#115e66;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #eee}
-.source-toggle{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.source-toggle{display:flex;align-items:center;gap:0;margin-bottom:8px}
 .source-toggle span{font-size:11px;font-weight:600;color:#888}
-.source-toggle .switch{position:relative;width:40px;height:22px;background:#ccc;border-radius:11px;cursor:pointer;transition:.2s}
-.source-toggle .switch.active{background:#115e66}
-.source-toggle .switch::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:.2s}
-.source-toggle .switch.active::after{left:21px}
+.source-pills{display:flex;border-radius:6px;overflow:hidden;border:1px solid #ddd}
+.source-pills button{padding:6px 14px;border:none;font-size:11px;font-weight:600;cursor:pointer;background:#f5f5f5;color:#888;transition:.2s;border-right:1px solid #ddd}
+.source-pills button:last-child{border-right:none}
+.source-pills button.active{background:#115e66;color:#fff}
+.source-pills button:hover:not(.active){background:#e8e8e8}
 .api-fields{background:#f0f7f7;border:1px solid #d0e0e0;border-radius:6px;padding:12px;margin-top:8px}
 .api-fields.hidden{display:none}
 .api-fields label{color:#115e66}
+.embed-fields{background:#f7f0f7;border:1px solid #d0c0e0;border-radius:6px;padding:12px;margin-top:8px}
+.embed-fields.hidden{display:none}
+.embed-fields label{color:#7b2d8e}
+.embed-fields textarea{min-height:100px;font-family:'Menlo','Monaco','Courier New',monospace;font-size:12px;background:#faf5fc;border-color:#d0c0e0}
+.embed-fields textarea:focus{border-color:#7b2d8e;box-shadow:0 0 0 3px rgba(123,45,142,.1)}
+.embed-preview{margin-top:8px;border:1px dashed #d0c0e0;border-radius:6px;padding:12px;background:#fff;min-height:60px}
+.embed-preview-label{font-size:10px;font-weight:600;color:#7b2d8e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
 .btn-test{display:inline-block;padding:5px 14px;background:#00c7b0;color:#fff;border:none;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;margin-top:6px}
 .btn-test:hover{background:#00b09e}
 .test-result{font-size:12px;color:#115e66;margin-top:4px;font-weight:500}
@@ -95,37 +103,37 @@ const DEFAULT_CONFIG = {
     confidential: true
   },
   heroCards: [
-    { label: "Consumer", value: 105, status: "above", statusText: "Above Baseline", sourceMode: "manual", apiUrl: "", apiPath: "", apiRefresh: 0, tooltip: "Composite index of domestic spend, international spend, remittances, and mall footfall." },
-    { label: "Travel", value: 95, status: "mixed", statusText: "Mixed / Split Recovery", sourceMode: "manual", apiUrl: "", apiPath: "", apiRefresh: 0, tooltip: "Weighted average of passenger volumes, airline operations, and route coverage." },
-    { label: "Investor", value: 10, status: "critical", statusText: "Critical", sourceMode: "manual", apiUrl: "", apiPath: "", apiRefresh: 0, tooltip: "DFM market capitalisation as percentage of pre-conflict baseline." }
+    { label: "Consumer", value: 105, status: "above", statusText: "Above Baseline", sourceMode: "manual", apiUrl: "", apiPath: "", apiRefresh: 0, htmlEmbed: "", tooltip: "Composite index of domestic spend, international spend, remittances, and mall footfall." },
+    { label: "Travel", value: 95, status: "mixed", statusText: "Mixed / Split Recovery", sourceMode: "manual", apiUrl: "", apiPath: "", apiRefresh: 0, htmlEmbed: "", tooltip: "Weighted average of passenger volumes, airline operations, and route coverage." },
+    { label: "Investor", value: 10, status: "critical", statusText: "Critical", sourceMode: "manual", apiUrl: "", apiPath: "", apiRefresh: 0, htmlEmbed: "", tooltip: "DFM market capitalisation as percentage of pre-conflict baseline." }
   ],
   sectors: [
-    { name: "Trade", pct: 65, status: "recovering", breakdown: "3 Above · 1 Normal · 3 Critical", sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "Air cargo thriving but maritime trade severely disrupted." },
-    { name: "Travel", pct: 95, status: "mixed", breakdown: "5 Above · 0 Normal · 2 Critical", sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "Partner airlines strong, Emirates capacity critically low." },
-    { name: "Tourism & Population", pct: 118, status: "above", breakdown: "3 Above · 2 Recovering", sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "Residents driving recovery, international tourism still lagging." },
-    { name: "Consumer", pct: 105, status: "above", breakdown: "3 Above · 2 Normal", sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "Strongest sector — all KPIs at or above baseline." },
-    { name: "Investor", pct: 63, status: "recovering", breakdown: "0 Above · 2 Normal · 1 Recovering · 1 Critical", sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "DFM market cap collapsed, trading activity weak." },
-    { name: "Business Environment", pct: 70, status: "recovering", breakdown: "0 Above · 2 Normal · 1 Critical", sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "Mainland licences near-normal, freezones deeply suppressed." }
+    { name: "Trade", pct: 65, status: "recovering", breakdown: "3 Above · 1 Normal · 3 Critical", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "Air cargo thriving but maritime trade severely disrupted." },
+    { name: "Travel", pct: 95, status: "mixed", breakdown: "5 Above · 0 Normal · 2 Critical", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "Partner airlines strong, Emirates capacity critically low." },
+    { name: "Tourism & Population", pct: 118, status: "above", breakdown: "3 Above · 2 Recovering", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "Residents driving recovery, international tourism still lagging." },
+    { name: "Consumer", pct: 105, status: "above", breakdown: "3 Above · 2 Normal", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "Strongest sector — all KPIs at or above baseline." },
+    { name: "Investor", pct: 63, status: "recovering", breakdown: "0 Above · 2 Normal · 1 Recovering · 1 Critical", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "DFM market cap collapsed, trading activity weak." },
+    { name: "Business Environment", pct: 70, status: "recovering", breakdown: "0 Above · 2 Normal · 1 Critical", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "Mainland licences near-normal, freezones deeply suppressed." }
   ],
   winners: [
-    { label: "Residents Hotel Check-ins", sector: "Tourism", value: 222, sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "Hotel stays by UAE residents as % of pre-conflict baseline." },
-    { label: "Remittance Outbound", sector: "Consumer", value: 167, sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "Outbound remittance transfers as % of baseline." },
-    { label: "OAL Countries Served", sector: "Travel", value: 138, sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "Number of countries served by Other Airline (non-Emirates) partners." },
-    { label: "Total Passenger Vol.", sector: "Travel", value: 135, sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "Total airport passenger throughput vs baseline." },
-    { label: "FlyDubai Passenger Vol.", sector: "Travel", value: 130, sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "FlyDubai passenger numbers vs pre-conflict levels." },
-    { label: "Jebel Ali Empties", sector: "Trade", value: 120, sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "Empty container throughput at Jebel Ali port." },
-    { label: "Residents Inbound", sector: "Tourism", value: 118, sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "Resident population movement inbound vs baseline." },
-    { label: "DNATA Cargo", sector: "Trade", value: 116, sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "DNATA air cargo handling volume vs baseline." },
-    { label: "EK Cargo", sector: "Trade", value: 114, sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "Emirates SkyCargo freight volume vs baseline." }
+    { label: "Residents Hotel Check-ins", sector: "Tourism", value: 222, sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "Hotel stays by UAE residents as % of pre-conflict baseline." },
+    { label: "Remittance Outbound", sector: "Consumer", value: 167, sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "Outbound remittance transfers as % of baseline." },
+    { label: "OAL Countries Served", sector: "Travel", value: 138, sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "Number of countries served by Other Airline (non-Emirates) partners." },
+    { label: "Total Passenger Vol.", sector: "Travel", value: 135, sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "Total airport passenger throughput vs baseline." },
+    { label: "FlyDubai Passenger Vol.", sector: "Travel", value: 130, sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "FlyDubai passenger numbers vs pre-conflict levels." },
+    { label: "Jebel Ali Empties", sector: "Trade", value: 120, sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "Empty container throughput at Jebel Ali port." },
+    { label: "Residents Inbound", sector: "Tourism", value: 118, sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "Resident population movement inbound vs baseline." },
+    { label: "DNATA Cargo", sector: "Trade", value: 116, sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "DNATA air cargo handling volume vs baseline." },
+    { label: "EK Cargo", sector: "Trade", value: 114, sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "Emirates SkyCargo freight volume vs baseline." }
   ],
   losers: [
-    { label: "Jebel Ali Inbound", sector: "Trade", value: 3, sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "Inbound sea cargo at Jebel Ali port vs baseline." },
-    { label: "Sea Cargo (Jebel Ali)", sector: "Trade", value: 8, sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "Overall maritime trade volume vs baseline." },
-    { label: "Total Flights", sector: "Travel", value: 8, sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "Total flight operations vs baseline." },
-    { label: "DFM Market Size", sector: "Investor", value: 10, sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "Dubai Financial Market total capitalisation vs baseline." },
-    { label: "EK Passenger Vol.", sector: "Travel", value: 12, sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "Emirates airline passenger volume vs baseline." },
-    { label: "Jebel Ali Outbound", sector: "Trade", value: 12, sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "Outbound cargo from Jebel Ali vs baseline." },
-    { label: "Freezone Licences", sector: "Business", value: 33, sourceMode: "manual", apiUrl: "", apiPath: "", tooltip: "New business registrations in Dubai freezones vs baseline." }
+    { label: "Jebel Ali Inbound", sector: "Trade", value: 3, sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "Inbound sea cargo at Jebel Ali port vs baseline." },
+    { label: "Sea Cargo (Jebel Ali)", sector: "Trade", value: 8, sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "Overall maritime trade volume vs baseline." },
+    { label: "Total Flights", sector: "Travel", value: 8, sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "Total flight operations vs baseline." },
+    { label: "DFM Market Size", sector: "Investor", value: 10, sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "Dubai Financial Market total capitalisation vs baseline." },
+    { label: "EK Passenger Vol.", sector: "Travel", value: 12, sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "Emirates airline passenger volume vs baseline." },
+    { label: "Jebel Ali Outbound", sector: "Trade", value: 12, sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "Outbound cargo from Jebel Ali vs baseline." },
+    { label: "Freezone Licences", sector: "Business", value: 33, sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "", tooltip: "New business registrations in Dubai freezones vs baseline." }
   ],
   story: {
     title: "This Week's Story — Consumer Deep-Dive",
@@ -133,66 +141,66 @@ const DEFAULT_CONFIG = {
     keyInsight: "Dubai's consumer economy has effectively returned to pre-conflict normal. The challenge is no longer demand — it's ensuring supply chains (trade, logistics) and capital markets (investor confidence) can keep pace."
   },
   momentum: [
-    { label: "EK Cargo", w3: "↑", w2: "↑", w1: "↑", current: "↑", value: 114, tooltip: "Consistent upward trajectory — air freight filling the maritime gap.", sourceMode: "manual", apiUrl: "", apiPath: "" },
-    { label: "EK Passenger", w3: "↓", w2: "↓", w1: "↓", current: "↓", value: 12, tooltip: "Emirates passenger capacity remains critically low with no signs of recovery.", sourceMode: "manual", apiUrl: "", apiPath: "" },
-    { label: "Mall Visits", w3: "↑", w2: "↑", w1: "→", current: "↑", value: 94, tooltip: "Mall footfall recovering steadily with +29% WoW surge this week.", sourceMode: "manual", apiUrl: "", apiPath: "" },
-    { label: "Domestic Card Spend", w3: "↑", w2: "↑", w1: "↑", current: "↑", value: 105, tooltip: "Consumer spending has crossed baseline and continues to strengthen.", sourceMode: "manual", apiUrl: "", apiPath: "" },
-    { label: "DFM Market Cap", w3: "↓", w2: "↓", w1: "→", current: "↓", value: 10, tooltip: "Market capitalisation collapsed and not recovering — biggest risk.", sourceMode: "manual", apiUrl: "", apiPath: "" },
-    { label: "Business Licences", w3: "↑", w2: "↑", w1: "→", current: "↑", value: 95, tooltip: "Total licence issuance near-normal, driven by mainland activity.", sourceMode: "manual", apiUrl: "", apiPath: "" }
+    { label: "EK Cargo", w3: "↑", w2: "↑", w1: "↑", current: "↑", value: 114, tooltip: "Consistent upward trajectory — air freight filling the maritime gap.", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" },
+    { label: "EK Passenger", w3: "↓", w2: "↓", w1: "↓", current: "↓", value: 12, tooltip: "Emirates passenger capacity remains critically low with no signs of recovery.", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" },
+    { label: "Mall Visits", w3: "↑", w2: "↑", w1: "→", current: "↑", value: 94, tooltip: "Mall footfall recovering steadily with +29% WoW surge this week.", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" },
+    { label: "Domestic Card Spend", w3: "↑", w2: "↑", w1: "↑", current: "↑", value: 105, tooltip: "Consumer spending has crossed baseline and continues to strengthen.", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" },
+    { label: "DFM Market Cap", w3: "↓", w2: "↓", w1: "→", current: "↓", value: 10, tooltip: "Market capitalisation collapsed and not recovering — biggest risk.", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" },
+    { label: "Business Licences", w3: "↑", w2: "↑", w1: "→", current: "↑", value: 95, tooltip: "Total licence issuance near-normal, driven by mainland activity.", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" }
   ],
   sectorBreakdown: [
     {
       name: "Trade", status: "recovering",
       narrative: "A sector of stark contrasts. Air cargo has surged past baseline — EK Cargo at 114% and DNATA at 116% — reflecting Dubai's pivot to air freight as sea routes remain disrupted. But Jebel Ali's inbound sea cargo sits at a catastrophic 3%, and overall maritime trade is at just 8%. Dubai's role as a re-export hub via sea is severely compromised, even as the air corridor thrives.",
       kpis: [
-        { label: "DNATA Cargo", value: 116, tooltip: "DNATA ground handling cargo throughput vs pre-conflict baseline.", wow: "+4%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "" },
-        { label: "EK Cargo", value: 114, tooltip: "Emirates SkyCargo freight volume vs baseline.", wow: "+2%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "" },
-        { label: "Jebel Ali Inbound", value: 3, tooltip: "Inbound sea cargo at Jebel Ali — catastrophically low.", wow: "-1%", wowDir: "negative", sourceMode: "manual", apiUrl: "", apiPath: "" }
+        { label: "DNATA Cargo", value: 116, tooltip: "DNATA ground handling cargo throughput vs pre-conflict baseline.", wow: "+4%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" },
+        { label: "EK Cargo", value: 114, tooltip: "Emirates SkyCargo freight volume vs baseline.", wow: "+2%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" },
+        { label: "Jebel Ali Inbound", value: 3, tooltip: "Inbound sea cargo at Jebel Ali — catastrophically low.", wow: "-1%", wowDir: "negative", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" }
       ]
     },
     {
       name: "Travel", status: "mixed",
       narrative: "Dubai's airports tell two stories. Partner airlines are thriving — OAL countries served at 138%, FlyDubai passengers at 130%, and total passenger volume at 135% above baseline. But Emirates itself is in crisis: passenger volumes at 12% and total flights at just 8%. The demand is there; Emirates' capacity isn't.",
       kpis: [
-        { label: "OAL Countries", value: 138, tooltip: "Countries served by non-Emirates partner airlines.", wow: "+5%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "" },
-        { label: "Total Passenger Vol.", value: 135, tooltip: "All-airline passenger throughput at DXB.", wow: "+3%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "" },
-        { label: "EK Passenger Vol.", value: 12, tooltip: "Emirates passenger capacity — critically low.", wow: "-2%", wowDir: "negative", sourceMode: "manual", apiUrl: "", apiPath: "" }
+        { label: "OAL Countries", value: 138, tooltip: "Countries served by non-Emirates partner airlines.", wow: "+5%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" },
+        { label: "Total Passenger Vol.", value: 135, tooltip: "All-airline passenger throughput at DXB.", wow: "+3%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" },
+        { label: "EK Passenger Vol.", value: 12, tooltip: "Emirates passenger capacity — critically low.", wow: "-2%", wowDir: "negative", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" }
       ]
     },
     {
       name: "Tourism & Population", status: "above",
       narrative: "Residents are the engine here. Hotel check-ins by residents have more than doubled baseline (222%), and both inbound and outbound resident movement is comfortably above 100%. Tourism is recovering more slowly — inbound tourists at 67% — but the domestic population is more than compensating.",
       kpis: [
-        { label: "Residents Hotel Check-ins", value: 222, tooltip: "Resident hotel stays as % of pre-conflict levels.", wow: "+18%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "" },
-        { label: "Residents Inbound", value: 118, tooltip: "Resident inbound movement vs baseline.", wow: "+3%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "" },
-        { label: "Tourists Inbound", value: 67, tooltip: "International tourist arrivals — still below normal.", wow: "+8%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "" }
+        { label: "Residents Hotel Check-ins", value: 222, tooltip: "Resident hotel stays as % of pre-conflict levels.", wow: "+18%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" },
+        { label: "Residents Inbound", value: 118, tooltip: "Resident inbound movement vs baseline.", wow: "+3%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" },
+        { label: "Tourists Inbound", value: 67, tooltip: "International tourist arrivals — still below normal.", wow: "+8%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" }
       ]
     },
     {
       name: "Consumer", status: "above",
       narrative: "The strongest sector in the tracker. Every single consumer KPI is at or above baseline. Domestic card spend (105%), international card spend (106%), and remittances have all crossed the pre-conflict threshold. Mall visits at 94% are the only metric still below baseline, and they're closing fast with a +29% WoW surge.",
       kpis: [
-        { label: "Remittance Outbound", value: 167, tooltip: "Outbound money transfers — surged due to pent-up demand.", wow: "+984%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "" },
-        { label: "Intl. Card Spend", value: 106, tooltip: "International card spending by visitors.", wow: "+6%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "" },
-        { label: "Domestic Card Spend", value: 105, tooltip: "Domestic card transaction volume.", wow: "+2%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "" }
+        { label: "Remittance Outbound", value: 167, tooltip: "Outbound money transfers — surged due to pent-up demand.", wow: "+984%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" },
+        { label: "Intl. Card Spend", value: 106, tooltip: "International card spending by visitors.", wow: "+6%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" },
+        { label: "Domestic Card Spend", value: 105, tooltip: "Domestic card transaction volume.", wow: "+2%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" }
       ]
     },
     {
       name: "Investor", status: "recovering",
       narrative: "The weakest sector and the biggest concern for long-term recovery. DFM market capitalisation sits at just 10% of baseline — a staggering loss of value. Trading activity (61%) and new investor growth (94%) show some life, but capital velocity dropped 80% WoW.",
       kpis: [
-        { label: "New Investor Growth", value: 94, tooltip: "New investor account registrations at DFM.", wow: "+5%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "" },
-        { label: "DFM Trading Activity", value: 61, tooltip: "Daily average trading volume vs baseline.", wow: "-80%", wowDir: "negative", sourceMode: "manual", apiUrl: "", apiPath: "" },
-        { label: "DFM Market Size", value: 10, tooltip: "Total market capitalisation — critical collapse.", wow: "-3%", wowDir: "negative", sourceMode: "manual", apiUrl: "", apiPath: "" }
+        { label: "New Investor Growth", value: 94, tooltip: "New investor account registrations at DFM.", wow: "+5%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" },
+        { label: "DFM Trading Activity", value: 61, tooltip: "Daily average trading volume vs baseline.", wow: "-80%", wowDir: "negative", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" },
+        { label: "DFM Market Size", value: 10, tooltip: "Total market capitalisation — critical collapse.", wow: "-3%", wowDir: "negative", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" }
       ]
     },
     {
       name: "Business Environment", status: "recovering",
       narrative: "Mainland business formation is near-normal at 82%, with total licences at 95%. The worry is freezones: at 33%, international business registrations remain deeply suppressed. The +78% WoW in freezone licences is encouraging but from a very low base.",
       kpis: [
-        { label: "Business Licences Total", value: 95, tooltip: "Total new business licences issued across all zones.", wow: "+3%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "" },
-        { label: "Mainland Licences", value: 82, tooltip: "Mainland (non-freezone) business registrations.", wow: "+2%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "" },
-        { label: "Freezone Licences", value: 33, tooltip: "International freezone registrations — deeply suppressed.", wow: "+78%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "" }
+        { label: "Business Licences Total", value: 95, tooltip: "Total new business licences issued across all zones.", wow: "+3%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" },
+        { label: "Mainland Licences", value: 82, tooltip: "Mainland (non-freezone) business registrations.", wow: "+2%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" },
+        { label: "Freezone Licences", value: 33, tooltip: "International freezone registrations — deeply suppressed.", wow: "+78%", wowDir: "positive", sourceMode: "manual", apiUrl: "", apiPath: "", htmlEmbed: "" }
       ]
     }
   ],
@@ -252,18 +260,25 @@ function toggleSection(id) {
 }
 
 function sourceToggle(obj, prefix, onUpdate) {
-  const isApi = obj.sourceMode === 'api';
+  const mode = obj.sourceMode || 'manual';
   return `
     <div class="source-toggle">
-      <span>Manual</span>
-      <div class="switch ${isApi ? 'active' : ''}" onclick="toggleSource('${prefix}', this)" data-prefix="${prefix}"></div>
-      <span>API Source</span>
+      <div class="source-pills">
+        <button class="${mode==='manual'?'active':''}" onclick="setSourceMode('${prefix}','manual')">📝 Manual</button>
+        <button class="${mode==='api'?'active':''}" onclick="setSourceMode('${prefix}','api')">🔗 API</button>
+        <button class="${mode==='embed'?'active':''}" onclick="setSourceMode('${prefix}','embed')">🧩 HTML Embed</button>
+      </div>
     </div>
-    <div class="api-fields ${isApi ? '' : 'hidden'}" id="${prefix}_api">
-      <div class="field"><label>API URL</label><input type="text" value="${obj.apiUrl || ''}" onchange="updateField('${prefix}','apiUrl',this.value)" placeholder="https://your-api.com/endpoint"></div>
-      <div class="field"><label>JSON Path</label><input type="text" value="${obj.apiPath || ''}" onchange="updateField('${prefix}','apiPath',this.value)" placeholder="data.value"><div class="help-text">e.g. data.consumer.recovery_pct</div></div>
+    <div class="api-fields ${mode==='api' ? '' : 'hidden'}" id="${prefix}_api">
+      <div class="field"><label>API URL</label><input type="text" value="${esc(obj.apiUrl || '')}" onchange="updateField('${prefix}','apiUrl',this.value)" placeholder="https://your-api.com/endpoint"></div>
+      <div class="field"><label>JSON Path</label><input type="text" value="${esc(obj.apiPath || '')}" onchange="updateField('${prefix}','apiPath',this.value)" placeholder="data.value"><div class="help-text">e.g. data.consumer.recovery_pct</div></div>
       <button class="btn-test" onclick="testApi('${prefix}')">⚡ Test</button>
       <div class="test-result" id="${prefix}_result"></div>
+    </div>
+    <div class="embed-fields ${mode==='embed' ? '' : 'hidden'}" id="${prefix}_embed">
+      <div class="field"><label>HTML Embed Code</label><textarea placeholder="Paste HTML, iframe, or widget code here..." onchange="updateField('${prefix}','htmlEmbed',this.value)">${esc(obj.htmlEmbed || '')}</textarea><div class="help-text">Paste any HTML snippet — iframes, charts, widgets, live data embeds</div></div>
+      <button class="btn-test" style="background:#7b2d8e" onclick="previewEmbed('${prefix}')">👁 Preview Embed</button>
+      <div class="embed-preview hidden" id="${prefix}_embed_preview"><div class="embed-preview-label">Preview</div><div id="${prefix}_embed_content"></div></div>
     </div>`;
 }
 
@@ -354,7 +369,7 @@ function buildListSection(title, icon, id, key) {
   const addBtn = document.createElement('button');
   addBtn.className = 'btn-add';
   addBtn.textContent = '+ Add Item';
-  addBtn.onclick = () => { config[key].push({label:'New KPI',sector:'',value:0,sourceMode:'manual',apiUrl:'',apiPath:'',tooltip:''}); autoSave(); buildEditor(); };
+  addBtn.onclick = () => { config[key].push({label:'New KPI',sector:'',value:0,sourceMode:'manual',apiUrl:'',apiPath:'',htmlEmbed:'',tooltip:''}); autoSave(); buildEditor(); };
   const container = document.createElement('div');
   container.appendChild(wrap);
   container.appendChild(addBtn);
@@ -434,7 +449,7 @@ function buildSectorBreakdownSection() {
       <div class="field"><label>Narrative</label><textarea style="min-height:100px" onchange="config.sectorBreakdown[${si}].narrative=this.value;autoSave()">${esc(sec.narrative)}</textarea></div>
       <h4 style="margin:12px 0 8px;color:#115e66;font-size:13px">KPIs</h4>
       <div class="item-list">${kpiHtml}</div>
-      <button class="btn-add" onclick="config.sectorBreakdown[${si}].kpis.push({label:'New KPI',value:0,tooltip:'',wow:'',wowDir:'positive',sourceMode:'manual',apiUrl:'',apiPath:''});autoSave();buildEditor()">+ Add KPI</button>
+      <button class="btn-add" onclick="config.sectorBreakdown[${si}].kpis.push({label:'New KPI',value:0,tooltip:'',wow:'',wowDir:'positive',sourceMode:'manual',apiUrl:'',apiPath:'',htmlEmbed:''});autoSave();buildEditor()">+ Add KPI</button>
     </div>`;
   });
   return makeSection('🏢 Sector Breakdown (Detailed)', 'sec_breakdown', wrap);
@@ -451,14 +466,21 @@ function buildMethodologySection() {
 // ============================================================
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-function toggleSource(prefix, el) {
+function setSourceMode(prefix, mode) {
   const obj = getObjByPrefix(prefix);
   if (!obj) return;
-  obj.sourceMode = obj.sourceMode === 'api' ? 'manual' : 'api';
-  el.classList.toggle('active');
-  document.getElementById(prefix + '_api').classList.toggle('hidden');
+  obj.sourceMode = mode;
   autoSave();
   buildEditor();
+}
+
+function previewEmbed(prefix) {
+  const obj = getObjByPrefix(prefix);
+  if (!obj || !obj.htmlEmbed) return;
+  const previewEl = document.getElementById(prefix + '_embed_preview');
+  const contentEl = document.getElementById(prefix + '_embed_content');
+  previewEl.classList.remove('hidden');
+  contentEl.innerHTML = obj.htmlEmbed;
 }
 
 function updateField(prefix, field, value) {
@@ -585,34 +607,60 @@ fetchApiData();
 <\/script>`;
   }
 
-  const winnersHtml = c.winners.map((w,i) => `
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(0,199,176,.06);border-radius:8px;margin-bottom:6px;cursor:default" title="${esc(w.tooltip)}">
-      <div><span style="font-weight:600;color:#003d4c">${esc(w.label)}</span> <span style="font-size:11px;color:#115e66;background:rgba(17,94,102,.1);padding:2px 8px;border-radius:4px;margin-left:6px">${esc(w.sector)}</span></div>
-      <span id="winner-val-${i}" style="font-weight:800;color:#00c7b0;font-size:16px">${w.value}%</span>
-    </div>`).join('');
+  const winnersHtml = c.winners.map((w,i) => {
+    const valHtml = w.sourceMode === 'embed' && w.htmlEmbed
+      ? `<div style="margin-top:8px">${w.htmlEmbed}</div>`
+      : `<span id="winner-val-${i}" style="font-weight:800;color:#00c7b0;font-size:16px">${w.value}%</span>`;
+    return `
+    <div style="padding:10px 14px;background:rgba(0,199,176,.06);border-radius:8px;margin-bottom:6px;cursor:default" title="${esc(w.tooltip)}">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div><span style="font-weight:600;color:#003d4c">${esc(w.label)}</span> <span style="font-size:11px;color:#115e66;background:rgba(17,94,102,.1);padding:2px 8px;border-radius:4px;margin-left:6px">${esc(w.sector)}</span></div>
+        ${w.sourceMode !== 'embed' ? valHtml : ''}
+      </div>
+      ${w.sourceMode === 'embed' ? valHtml : ''}
+    </div>`;
+  }).join('');
 
-  const losersHtml = c.losers.map((l,i) => `
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(214,18,32,.06);border-radius:8px;margin-bottom:6px;cursor:default" title="${esc(l.tooltip)}">
-      <div><span style="font-weight:600;color:#003d4c">${esc(l.label)}</span> <span style="font-size:11px;color:#d61220;background:rgba(214,18,32,.1);padding:2px 8px;border-radius:4px;margin-left:6px">${esc(l.sector)}</span></div>
-      <span id="loser-val-${i}" style="font-weight:800;color:#d61220;font-size:16px">${l.value}%</span>
-    </div>`).join('');
+  const losersHtml = c.losers.map((l,i) => {
+    const valHtml = l.sourceMode === 'embed' && l.htmlEmbed
+      ? `<div style="margin-top:8px">${l.htmlEmbed}</div>`
+      : `<span id="loser-val-${i}" style="font-weight:800;color:#d61220;font-size:16px">${l.value}%</span>`;
+    return `
+    <div style="padding:10px 14px;background:rgba(214,18,32,.06);border-radius:8px;margin-bottom:6px;cursor:default" title="${esc(l.tooltip)}">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div><span style="font-weight:600;color:#003d4c">${esc(l.label)}</span> <span style="font-size:11px;color:#d61220;background:rgba(214,18,32,.1);padding:2px 8px;border-radius:4px;margin-left:6px">${esc(l.sector)}</span></div>
+        ${l.sourceMode !== 'embed' ? valHtml : ''}
+      </div>
+      ${l.sourceMode === 'embed' ? valHtml : ''}
+    </div>`;
+  }).join('');
 
-  const heroCardsHtml = c.heroCards.map((h,i) => `
+  const heroCardsHtml = c.heroCards.map((h,i) => {
+    const valueHtml = h.sourceMode === 'embed' && h.htmlEmbed
+      ? `<div style="margin:12px 0">${h.htmlEmbed}</div>`
+      : `<div id="hero-val-${i}" style="font-size:42px;font-weight:800;color:${statusColor(h.status)}">${h.value}%</div>`;
+    return `
     <div style="flex:1;background:#fff;border-radius:12px;padding:24px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06);border-top:4px solid ${statusColor(h.status)};cursor:default" title="${esc(h.tooltip)}">
       <div style="font-size:13px;font-weight:600;color:#6b7b82;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">${esc(h.label)}</div>
-      <div id="hero-val-${i}" style="font-size:42px;font-weight:800;color:${statusColor(h.status)}">${h.value}%</div>
+      ${valueHtml}
       <div style="display:inline-block;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:700;color:#fff;background:${statusColor(h.status)};margin-top:8px">${esc(h.statusText)}</div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
-  const sectorsHtml = c.sectors.map((s,i) => `
-    <div style="background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.05);border-left:4px solid ${statusColor(s.status)};cursor:default" title="${esc(s.tooltip)}">
-      <div style="font-size:12px;font-weight:600;color:#6b7b82;margin-bottom:4px">${esc(s.name)}</div>
-      <div style="display:flex;align-items:baseline;gap:8px">
+  const sectorsHtml = c.sectors.map((s,i) => {
+    const valHtml = s.sourceMode === 'embed' && s.htmlEmbed
+      ? `<div style="margin:8px 0">${s.htmlEmbed}</div>`
+      : `<div style="display:flex;align-items:baseline;gap:8px">
         <span id="sector-val-${i}" style="font-size:24px;font-weight:800;color:${statusColor(s.status)}">${s.pct}%</span>
         <span style="font-size:10px;font-weight:700;color:${statusColor(s.status)};text-transform:uppercase">${statusLabel(s.status)}</span>
-      </div>
+      </div>`;
+    return `
+    <div style="background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.05);border-left:4px solid ${statusColor(s.status)};cursor:default" title="${esc(s.tooltip)}">
+      <div style="font-size:12px;font-weight:600;color:#6b7b82;margin-bottom:4px">${esc(s.name)}</div>
+      ${valHtml}
       <div style="font-size:11px;color:#999;margin-top:4px">${esc(s.breakdown)}</div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
   const momRows = c.momentum.map((m,i) => `
     <tr title="${esc(m.tooltip)}" style="cursor:default">
@@ -625,7 +673,15 @@ fetchApiData();
     </tr>`).join('');
 
   const breakdownHtml = c.sectorBreakdown.map((sec,si) => {
-    const kpisHtml = sec.kpis.map((k,ki) => `
+    const kpisHtml = sec.kpis.map((k,ki) => {
+      if (k.sourceMode === 'embed' && k.htmlEmbed) {
+        return `
+      <div style="margin-bottom:12px;cursor:default" title="${esc(k.tooltip)}">
+        <div style="font-size:13px;font-weight:600;color:#003d4c;margin-bottom:8px">${esc(k.label)}</div>
+        <div>${k.htmlEmbed}</div>
+      </div>`;
+      }
+      return `
       <div style="margin-bottom:12px;cursor:default" title="${esc(k.tooltip)}">
         <div style="display:flex;justify-content:space-between;margin-bottom:4px">
           <span style="font-size:13px;font-weight:600;color:#003d4c">${esc(k.label)}</span>
@@ -637,7 +693,8 @@ fetchApiData();
         <div style="height:8px;background:#eee;border-radius:4px;overflow:hidden">
           <div style="height:100%;width:${Math.min(k.value,200)/2}%;background:${barColor(k.value)};border-radius:4px;transition:width 1s ease"></div>
         </div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
     return `
       <div style="background:#fff;border-radius:12px;padding:24px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.06);border-left:4px solid ${statusColor(sec.status)}">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
